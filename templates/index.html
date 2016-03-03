@@ -21,18 +21,19 @@
                 <br>
                 {% if pipeline %}
                     {% for op in pipeline %}
-                        {{ op }}
+                        {{ op }}<br>
                     {% endfor %}
                 {% endif %}
             </div>
-            <div class="col-md-5">
+            <div class="col-md-4">
                 Parameters
 
             </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
                 {{ wtf.quick_form(uform, enctype='multipart/form-data') }}
                 {% if image %}
-                    <img width="200" src="{{ url_for('static', filename=image) }}">
+                    <img width="500" src="{{ url_for('static', filename=image) }}">
+                    <script type="text/javascript">alert("{{ url_for('static', filename=image) }}")</script>
                 {% endif %}
             </div>
         </div>
