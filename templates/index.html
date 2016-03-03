@@ -25,14 +25,14 @@
                     {% endfor %}
                 {% endif %}
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
                 Parameters
 
             </div>
-            <div class="col-md-5">
+            <div class="col-md-7">
                 {{ wtf.quick_form(uform, enctype='multipart/form-data') }}
                 {% if image %}
-                    <img width="500" src="{{ url_for('static', filename=image) }}">
+                    <img width="700" src="{{ url_for('static', filename=image) }}">
                 {% endif %}
             </div>
         </div>

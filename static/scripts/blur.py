@@ -5,7 +5,7 @@ import sys
 
 # img = cv2.imread('lenna.jpg')
 img = cv2.imread(sys.argv[1])
-blur = cv2.blur(img,(5,5))
+blur = cv2.blur(img,(15,15))
 cv2.imwrite(sys.argv[1],blur)
 # return blur
 # cv2.imshow('Blur',blur)
