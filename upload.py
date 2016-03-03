@@ -1,10 +1,10 @@
 import os
 import imghdr
 from flask import Flask, render_template, make_response, redirect, url_for
-from flask.ext.bootstrap import Bootstrap
-from flask.ext.wtf import Form
-from wtforms import FileField, SubmitField, SelectField, ValidationError
-import cv2
+from flask_bootstrap import Bootstrap
+from flask_wtf import Form
+from wtforms import FileField, SubmitField, SelectField, ValidationError, widgets
+from wtforms.validators import Required
 from subprocess import call
 
 app = Flask(__name__)
@@ -23,10 +23,11 @@ def fill_list():
 class PipelineForm(Form):
     select_op = SelectField('Apply Operation',coerce=int,choices=lst)
     submit = SubmitField('Submit')
+    lsit = widgets.ListWidget()
 
 
 class UploadForm(Form):
-    image_file = FileField('Image file')
+    image_file = FileField('Image file',validators=[	])
     submit = SubmitField('Submit')
 
 image = None
@@ -35,6 +36,7 @@ pipeline = []
 @app.route('/', methods=['GET', 'POST'])
 def index():
     global image,pipeline
+    # pipeline = []
 
     uform = UploadForm()
     pform = PipelineForm()

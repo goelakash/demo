@@ -12,6 +12,23 @@
 {% endblock %}
 
 {% block content %}
+<style>
+.pipeline-item{
+	background:blue;
+	color: white;
+}
+</style>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.1.min.js">
+</script>
+<script type="text/javascript">
+
+	$(document).ready(function(){
+		$("#my-pipleine").each(function(){
+
+		});
+	});
+
+</script>
     <div class="container">
         <div class="row">
             <div class="col-md-3">
@@ -19,11 +36,16 @@
                 <br>
                 {{ wtf.quick_form(pform, enctype='multipart/form-data') }}
                 <br>
+                <div id="my-pipeline">
                 {% if pipeline %}
+                	<ol>
                     {% for op in pipeline %}
-                        {{ op }}<br>
+                        <li class="pipeline-item">{{ op }}</li>
+                        <br>
                     {% endfor %}
+                    </ol>
                 {% endif %}
+                </div>
             </div>
             <div class="col-md-2">
                 Parameters
