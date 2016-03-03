@@ -11,8 +11,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'top secret!'
 bootstrap = Bootstrap(app)
 
-FILE_EXT = ["jpg","jpeg","png"]
-
 lst=[]
 
 def fill_list():
