@@ -1,6 +1,6 @@
 import os
 import imghdr
-from flask import Flask, render_template
+from flask import Flask, render_template, make_response, redirect, url_for
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.wtf import Form
 from wtforms import FileField, SubmitField, SelectField, ValidationError
@@ -46,20 +46,34 @@ def index():
         op = lst[operation][1]
         pipeline.append(op)
 
-        file_location = os.path.join(app.static_folder, image)
-        script_location = os.path.join(app.static_folder, "scripts/"+pipeline[-1]+".py")
-        print file_location, script_location
-        call(["python",script_location,file_location])
+        if image != None:
+            file_location = os.path.join(app.static_folder, image)
+            script_location = os.path.join(app.static_folder, "scripts/"+pipeline[-1]+".py")
+            print file_location, script_location
+            call(["python",script_location,file_location])
+        else:
+            pipeline=[]
 
 
-    if uform.validate_on_submit():
+    elif uform.validate_on_submit():
         if hasattr(uform.image_file.data,'filename'):
             pipeline = []
+            for file in os.listdir(app.static_folder+"/temp"):
+                os.remove(app.static_folder+"/temp/"+file)
             image = 'temp/' + uform.image_file.data.filename
             uform.image_file.data.save(os.path.join(app.static_folder, image))
 
     return render_template('index.html', uform=uform, pform=pform, image=image, pipeline = pipeline)
 
+@app.after_request
+def add_header(response):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minutes.
+    """
+    response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+    response.headers['Cache-Control'] = 'public, max-age=0'
+    return response
 
 if __name__ == '__main__':
     fill_list()

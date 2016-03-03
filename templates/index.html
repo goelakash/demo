@@ -33,7 +33,6 @@
                 {{ wtf.quick_form(uform, enctype='multipart/form-data') }}
                 {% if image %}
                     <img width="500" src="{{ url_for('static', filename=image) }}">
-                    <script type="text/javascript">alert("{{ url_for('static', filename=image) }}")</script>
                 {% endif %}
             </div>
         </div>
