@@ -14,13 +14,20 @@
 
 {% block content %}
 <style>
+.js-remove{
+    text-align: right;
+}
+ul#editable{
+    list-style: none;
+    padding-left: 0;
+}
 .pipeline-item{
 	background:blue;
 	color: white;
     margin-top: 5px;
     margin-bottom: 5px;
     padding: 20px;
-    font-size: 24px;
+    font-size: 20px;
     border-radius: 5px;
     text-align: justify;
     float: inline-block;
@@ -34,7 +41,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/Sortable/1.4.2/Sortable.min.js">
 </script>
 <script type="text/javascript">
-
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 	$(document).ready(function(){
         // var sortable = Sortable.create($("#pipeline"));
         var editableList = Sortable.create(editable, {
@@ -52,18 +59,30 @@
             $("#editable").children().each(function(){
                 p_items.push($(this).val());
             });
-
-            // console.log(p_items);
-
-
+            console.log(p_items);
+            var data = new FormData();
+            data.append('arr',p_items)
+            $.ajax({
+               type: "POST",
+               url: $SCRIPT_ROOT + "/apply",
+               data: data,
+               processData: false,
+               contentType: false,
+            //    // data: JSON.stringify(p_items,null,'\t'),
+            //    // // contentType: 'application/json;charset=UTF-8',
+            //    // dataType: "json",
+               success: function(msg){
+                 console.log("Success")
+               }
+            });
         });
 
 		$("#add-item").on("click",function(){
             // alert("Yes");
             // var pl = document.getElementById("pipeline");
-            console.log($('#selector').find(":selected").val());
-            var new_item = "<div class='pipeline-item js-remove' value='"+$('#selector').find(":selected").val()+"'>"
-                            + $('#selector').find(":selected").text()+"</div>";
+            console.log("Adding "+$('#selector').find(":selected").val());
+            var new_item = "<li class='pipeline-item' value='"+$('#selector').find(":selected").val()+"'>"
+                            + $('#selector').find(":selected").text()+"<i class='js-remove'>✖</i></li>";
             $("#editable").append(new_item);
         });
 	});
@@ -90,13 +109,12 @@
                     <a name="e"></a>
 
                         <div style="margin-top: 20px;">
-                                <div id="editable">
-                                </div>
+                                <ul id="editable">
+                                </ul>
                         </div>
             </div>
             <div class="col-md-2">
                 Parameters
-                <!-- {{ wtf.quick_form(pform, enctype='multipart/form-data') }} -->
                 <form id="submitForm">
                     <input type="submit" value="Final Submit"></input>
                 </form>
