@@ -124,8 +124,13 @@ ul#editable{
                 {{ wtf.quick_form(uform, enctype='multipart/form-data') }}
                 <p id="response"></p>
                 {% if image %}
-                    <img id="preview" width="700" src="{{ url_for('static', filename=image) }}">
+                    <img id="original" width="400" src="{{ url_for('static', filename=image) }}">
+                    <br>
+                    <br>
+                    <img id="preview" width="400" src="{{ url_for('static', filename=image) }}">
+
                 {% endif %}
+
             </div>
         </div>
     </div>
