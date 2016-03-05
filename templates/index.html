@@ -72,7 +72,8 @@ ul#editable{
             //    // // contentType: 'application/json;charset=UTF-8',
             //    // dataType: "json",
                success: function(msg){
-                 console.log("Success")
+                 console.log(msg.result);
+                 $("#preview").attr("src",msg.result);
                }
             });
         });
@@ -121,8 +122,9 @@ ul#editable{
             </div>
             <div class="col-md-7">
                 {{ wtf.quick_form(uform, enctype='multipart/form-data') }}
+                <p id="response"></p>
                 {% if image %}
-                    <img width="700" src="{{ url_for('static', filename=image) }}">
+                    <img id="preview" width="700" src="{{ url_for('static', filename=image) }}">
                 {% endif %}
             </div>
         </div>

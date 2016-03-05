@@ -68,6 +68,8 @@ def apply():
                 os.remove(tuple_list[j][1])
                 j=j+1
             tuple_list = tuple_list[:i]
+            if i==0:
+                print "Emptying tuple_list"
 
         while i<len(pipeline_2):
             op = lst[pipeline_2[i]][1]
@@ -91,9 +93,10 @@ def apply():
             tuple_list.append((pipeline_2[i],output_location))
 
             i=i+1
-        print tuple_list[-1][1]
+
         image = tuple_list[-1][1]
-    return redirect(url_for("index"))
+    print "/static/temp/"+image.split("/")[-1]
+    return jsonify(result = "/static/temp/"+image.split("/")[-1])
 
 
 @app.route('/', methods=['GET', 'POST'])
