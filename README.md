@@ -1,5 +1,7 @@
 ###Toy Task #2 for CloudCV
 
+Demo: https://www.youtube.com/watch?v=cHKImT1Tuzs
+
 Run `python upload.py` in terminal.
 
 Dependencies:
