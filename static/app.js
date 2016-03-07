@@ -1,16 +1,17 @@
 console.log("app included");
 var _addEndpoints;
 var instance;
-var idCount=0;
+var idCount=2;
 
 function addNode(){
     idCount = idCount+1;
     console.log($('#selector').find(":selected").text());
     console.log("flowchartWindow"+idCount);
-    var new_item = '<div class="window jtk-node jsplumb-endpoint-anchor jsplumb-draggable jsplumb-connected" '
+    var new_item = '<div class="window jtk-node" '
                     +'id="flowchartWindow'+idCount+'">'+
-                    '<strong>'+$('#selector').find(":selected").text()+'</strong><br><br>'
-                    +'</div>'
+                    '<strong>'+$('#selector').find(":selected").text()+'</strong><br>'
+                    +'<label style="display: none;">'+idCount+'-'
+                    +$('#selector').find(":selected").val()+'</label></div>'
     $("#canvas").append(new_item);
     _addEndpoints("Window"+idCount);
     instance.draggable(document.querySelectorAll(".flowchart-demo .window"), { grid: [20, 10] })
@@ -131,6 +132,20 @@ jsPlumb.ready(function () {
 
     // suspend drawing and initialise.
     instance.batch(function () {
+
+        instance.addEndpoint("flowchartWindow1",sourceEndpoint, {
+                anchor: "BottomCenter", uuid: "Window1BottomCenter"
+        });
+        instance.addEndpoint("flowchartWindow1",sourceEndpoint, {
+                anchor: "BottomLeft", uuid: "Window1BottomLeft"
+        });
+        instance.addEndpoint("flowchartWindow1",sourceEndpoint, {
+                anchor: "BottomRight", uuid: "Window1BottomRight"
+        });
+        instance.addEndpoint("flowchartWindow2",targetEndpoint, {
+                anchor: "TopCenter", uuid: "Window2TopCenter"
+        });
+        instance.draggable(jsPlumb.getSelector(".flowchart-demo .window"), { grid: [20, 20] });
 
         // listen for new connections; initialise them the same way we initialise the connections at startup.
         instance.bind("connection", function (connInfo, originalEvent) {

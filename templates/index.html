@@ -32,12 +32,24 @@
         $("#submitForm").submit(function(e){
 
             e.preventDefault();
-            var p_items = []
+            var vertices = [],edges = [];
 
-            // Get stuff in p_items
+            console.log("Vertices");
+            var vChild=[];
+            $("#canvas").children(".window").find("label").each(function(){
+                vChild.push($(this).text().split("-"));
+            });
+
+            console.log("Edges");
+            var eChild=[];
+            $("#canvas").children(".aLabel").each(function(){
+                eChild.push($(this).text().split("-"));
+            });
+
 
             var data = new FormData();
-            data.append('arr',p_items)
+            data.append('vertices',vChild);
+            data.append('edges',eChild);
             $.ajax({
                type: "POST",
                url: $SCRIPT_ROOT + "/apply",
@@ -49,13 +61,6 @@
                  $("#preview").attr("src",msg.result);
                }
             });
-        });
-
-        $("#add-item").on("click",function(){
-            console.log("Adding "+$('#selector').find(":selected").val());
-            var new_item = "<li class='pipeline-item' value='"+$('#selector').find(":selected").val()+"'>"
-                            + $('#selector').find(":selected").text()+"<i class='js-remove'>✖</i></li>";
-            $("#editable").append(new_item);
         });
     });
 
@@ -81,6 +86,12 @@
 
 <!-- demo -->
                 <div class="jtk-demo-canvas canvas-wide flowchart-demo jtk-surface jtk-surface-nopan" id="canvas">
+                    <div class="window jtk-node" id="flowchartWindow1"><strong>Start</strong><br/>
+                    <label style="display: none;">1-0</label>
+                    </div>
+                    <div class="window jtk-node" id="flowchartWindow2"><strong>End</strong>
+                    <label style="display: none;">2-0</label>
+                    <br/></div>
                 </div>
 <!-- /demo -->
             </div>

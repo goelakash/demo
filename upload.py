@@ -36,61 +36,72 @@ def apply():
     pipeline_1 = []
     pipeline_2 = []
 
-    l = request.form.get('arr').split(',')
-    print l, type(l)
-    pipeline_2 = [-1]
-    for _ in l:
-        pipeline_2.append(int(_))
+    vertices = request.form.get('vertices').split(',')
+    edges = request.form.get('edges').split(',')
+    if u'' in vertices:
+        vertices.remove(u'')
+    if u'' in edges:
+        edges.remove(u'')
+    for i in xrange(len(vertices)):
+        vertices[i] = int(vertices[i])
+    for i in xrange(len(edges)):
+        edges[i] = int(edges[i])
+    print vertices
+    print edges
+    # print l, type(l)
+    # pipeline_2 = [-1]
+    # for _ in l:
+    #     pipeline_2.append(int(_))
 
-    for a,b in tuple_list:
-        pipeline_1.append(a)
+    # for a,b in tuple_list:
+    #     pipeline_1.append(a)
 
-    print pipeline_1
-    print pipeline_2
+    # print pipeline_1
+    # print pipeline_2
 
-    if pipeline_1 != pipeline_2:
-        i = 1;
-        min_len = min(len(pipeline_1),len(pipeline_2))
-        while i<min_len:
-            if pipeline_1[i]!=pipeline_2[i]:
-                break
-            i=i+1
+    # if pipeline_1 != pipeline_2:
+    #     i = 1;
+    #     min_len = min(len(pipeline_1),len(pipeline_2))
+    #     while i<min_len:
+    #         if pipeline_1[i]!=pipeline_2[i]:
+    #             break
+    #         i=i+1
 
-        if i<len(pipeline_1):
-            j = i
-            while j<len(pipeline_1):
-                print "Deleting "+tuple_list[j][1]
-                os.remove(tuple_list[j][1])
-                j=j+1
-            tuple_list = tuple_list[:i]
-            if i==0:
-                print "Emptying tuple_list"
+    #     if i<len(pipeline_1):
+    #         j = i
+    #         while j<len(pipeline_1):
+    #             print "Deleting "+tuple_list[j][1]
+    #             os.remove(tuple_list[j][1])
+    #             j=j+1
+    #         tuple_list = tuple_list[:i]
+    #         if i==0:
+    #             print "Emptying tuple_list"
 
-        while i<len(pipeline_2):
-            op = lst[pipeline_2[i]][1]
-            print op
-            print len(tuple_list)
+    #     while i<len(pipeline_2):
+    #         op = lst[pipeline_2[i]][1]
+    #         print op
+    #         print len(tuple_list)
 
-            input_location = os.path.join(app.static_folder, tuple_list[i-1][1])
-            script_location = os.path.join(app.static_folder, "scripts/"+op+".py")
+    #         input_location = os.path.join(app.static_folder, tuple_list[i-1][1])
+    #         script_location = os.path.join(app.static_folder, "scripts/"+op+".py")
 
-            print "Before: "+input_location
+    #         print "Before: "+input_location
 
-            name, ext = os.path.splitext(input_location)
-            name = name[:name.rfind("_")]
-            timestamp = time.time()
-            output_location = name+"_"+str(timestamp)+ext
+    #         name, ext = os.path.splitext(input_location)
+    #         name = name[:name.rfind("_")]
+    #         timestamp = time.time()
+    #         output_location = name+"_"+str(timestamp)+ext
 
-            print "After: "+output_location
+    #         print "After: "+output_location
 
-            call(["python",script_location,input_location,output_location])
+    #         call(["python",script_location,input_location,output_location])
 
-            tuple_list.append((pipeline_2[i],output_location))
+    #         tuple_list.append((pipeline_2[i],output_location))
 
-            i=i+1
+    #         i=i+1
 
-        image = tuple_list[-1][1]
-    print "/static/temp/"+image.split("/")[-1]
+    #     image = tuple_list[-1][1]
+    # print "/static/temp/"+image.split("/")[-1]
     return jsonify(result = "/static/temp/"+image.split("/")[-1])
 
 
