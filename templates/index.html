@@ -13,53 +13,29 @@
 {% endblock %}
 
 {% block content %}
-<style>
-.js-remove{
-    text-align: right;
-}
-ul#editable{
-    list-style: none;
-    padding-left: 0;
-}
-.pipeline-item{
-	background:blue;
-	color: white;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    padding: 20px;
-    font-size: 20px;
-    border-radius: 5px;
-    text-align: justify;
-    float: inline-block;
-}
-.pipeline-item:hover{
-    background: red;
-}
-</style>
-<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.1.min.js">
-</script>
+<script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+<script src="{{url_for('static',filename=plumb)}}"></script>
+<script src="{{url_for('static',filename=app)}}"></script>
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" href="https://jsplumbtoolkit.com/css/jsPlumbToolkit-defaults.css">
+<link rel="stylesheet" href="https://jsplumbtoolkit.com/css/jsPlumbToolkit-demo.css">
+<link rel="stylesheet" href="{{url_for('static',filename=app_css)}}">
 <script src="//cdnjs.cloudflare.com/ajax/libs/Sortable/1.4.2/Sortable.min.js">
 </script>
 <script type="text/javascript">
     $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-	$(document).ready(function(){
-        // var sortable = Sortable.create($("#pipeline"));
-        var editableList = Sortable.create(editable, {
-          filter: '.js-remove',
-          onFilter: function (evt) {
-            var el = editableList.closest(evt.item); // get dragged item
-            el && el.parentNode.removeChild(el);
-          }
-        });
 
+    $(document).ready(function(){
+        // var sortable = Sortable.create($("#pipeline"));
         $("#submitForm").submit(function(e){
 
             e.preventDefault();
             var p_items = []
-            $("#editable").children().each(function(){
-                p_items.push($(this).val());
-            });
-            console.log(p_items);
+
+            // Get stuff in p_items
+
             var data = new FormData();
             data.append('arr',p_items)
             $.ajax({
@@ -68,9 +44,6 @@ ul#editable{
                data: data,
                processData: false,
                contentType: false,
-            //    // data: JSON.stringify(p_items,null,'\t'),
-            //    // // contentType: 'application/json;charset=UTF-8',
-            //    // dataType: "json",
                success: function(msg){
                  console.log(msg.result);
                  $("#preview").attr("src",msg.result);
@@ -78,22 +51,21 @@ ul#editable{
             });
         });
 
-		$("#add-item").on("click",function(){
-            // alert("Yes");
-            // var pl = document.getElementById("pipeline");
+        $("#add-item").on("click",function(){
             console.log("Adding "+$('#selector').find(":selected").val());
             var new_item = "<li class='pipeline-item' value='"+$('#selector').find(":selected").val()+"'>"
                             + $('#selector').find(":selected").text()+"<i class='js-remove'>✖</i></li>";
             $("#editable").append(new_item);
         });
-	});
+    });
 
 </script>
     <div class="container">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-9">
                 Pipeline
 
+                <form id="submitForm">
                     <select id="selector">
                         <!-- {% if lst %} -->
                         {% for i in lst %}
@@ -103,31 +75,23 @@ ul#editable{
                         {% endfor %}
                         <!-- {% endif %} -->
                     </select>
-                    <button id="add-item" click="add_operation">
-                        Add operation
-                    </button>
-
-                    <a name="e"></a>
-
-                        <div style="margin-top: 20px;">
-                                <ul id="editable">
-                                </ul>
-                        </div>
-            </div>
-            <div class="col-md-2">
-                Parameters
-                <form id="submitForm">
+                    <button type="button" onclick="addNode()"> Add operation</button>
                     <input type="submit" value="Final Submit"></input>
                 </form>
+
+<!-- demo -->
+                <div class="jtk-demo-canvas canvas-wide flowchart-demo jtk-surface jtk-surface-nopan" id="canvas">
+                </div>
+<!-- /demo -->
             </div>
-            <div class="col-md-7">
+            <div class="col-md-3">
                 {{ wtf.quick_form(uform, enctype='multipart/form-data') }}
                 <p id="response"></p>
                 {% if image %}
-                    <img id="original" width="400" src="{{ url_for('static', filename=image) }}">
+                    <img id="original" width="300" src="{{ url_for('static', filename=image) }}">
                     <br>
                     <br>
-                    <img id="preview" width="400" src="{{ url_for('static', filename=image) }}">
+                    <img id="preview" width="300" src="{{ url_for('static', filename=image) }}">
 
                 {% endif %}
 

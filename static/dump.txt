@@ -1,0 +1,12 @@
+var idCount=0;
+
+function addNode(){
+    idCount = idCount+1;
+    console.log($('#selector').find(":selected").text());
+    console.log("flowchartWindow"+idCount);
+    var new_item = "<div class='window jtk-node' id='flowchartWindow"+idCount+"'>" + $('#selector').find(":selected").text()
+                    +"<br/><br/></div>";
+    $("#canvas").append(new_item);
+    _addEndpoints("flowchartWindow"+idCount);
+    instance.draggable(jsPlumb.getSelector(".flowchart-demo .window"), { grid: [20, 20] });
+}

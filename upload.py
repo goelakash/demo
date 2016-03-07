@@ -22,11 +22,6 @@ def fill_list():
             lst.append((count,file[:-3]))
             count+=1
 
-# class PipelineForm(Form):
-#     width = TextField('Width')
-#     height = TextField('Height')
-#     submit = SubmitField('Final Submit')
-
 class UploadForm(Form):
     image_file = FileField('Image file')
     submit = SubmitField('Submit')
@@ -120,7 +115,7 @@ def index():
     except e:
         print "Exception happened"
         print type(e)
-    return render_template('index.html', uform=uform, image=image, lst=lst)
+    return render_template('index.html', uform=uform, image=image, lst=lst, plumb="jsPlumb-2.0.7.js",app="app.js",app_css="app.css")
 
 @app.after_request
 def add_header(response):
