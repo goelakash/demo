@@ -6,7 +6,7 @@
 {% block navbar %}
     <nav class="navbar navbar-inverse" role="navigation">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">Upload</a>
+            <a class="navbar-brand" href="{{ url_for('index') }}">Simple MNIST Trainer</a>
         </div>
     </nav>
     </script>
@@ -57,8 +57,8 @@
                processData: false,
                contentType: false,
                success: function(msg){
-                 console.log(msg.result);
-                 $("#preview").attr("src",msg.result);
+                 console.log(msg);
+                 $("#preview").text(msg);
                }
             });
         });
@@ -102,13 +102,14 @@
             <div class="col-md-3">
                 {{ wtf.quick_form(uform, enctype='multipart/form-data') }}
                 <p id="response"></p>
-                {% if image %}
-                    <img id="original" width="300" src="{{ url_for('static', filename=image) }}">
+                <p id="preview"></p>
+                <!-- {% if image %} -->
+                    <!-- <img id="original" width="300" src="{{ url_for('static', filename=image) }}"> -->
                     <br>
                     <br>
-                    <img id="preview" width="300" src="{{ url_for('static', filename=image) }}">
+                    <!-- <img id="preview" width="300" src="{{ url_for('static', filename=image) }}"> -->
 
-                {% endif %}
+                <!-- {% endif %} -->
 
             </div>
         </div>
