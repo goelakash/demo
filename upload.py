@@ -13,14 +13,29 @@ app = Flask(__name__)
 # mongo = PyMongo(app)
 app.config['SECRET_KEY'] = 'top secret!'
 bootstrap = Bootstrap(app)
-lst=[]
+lst_arr=[]
+
+d ={
+    'core':
+        {
+            1:'Dense',
+            2:'Activation',
+            3:'Dropout'
+        },
+    'convolutional':
+        {
+            1:'Convolution2D',
+            2:'MaxPooling2D',
+            3:'AveragePooling2D'
+        }
+}
 
 def fill_list():
-    count = 0
-    for file in os.listdir(os.path.join(app.static_folder, "scripts")):
-        if file[-2:]=='py':
-            lst.append((count,file[:-3]))
-            count+=1
+    for k,v in d.iteritems():
+        lst = []
+        for ind,val in v.iteritems():
+            lst.append((ind,val))
+        lst_arr.append(lst)
 
 class UploadForm(Form):
     image_file = FileField('Image file')
@@ -28,6 +43,32 @@ class UploadForm(Form):
 
 image = None
 tuple_list = []
+vtype=[]
+
+
+# Temporary graph class
+
+class dGraph:
+
+    def __init__(self,vList,eList):
+        self.vertices={}
+        self.edges={}
+        self.vertices[1]='Input'
+        self.vertices[2]='Output'
+        i=0
+        while i<len(vList):
+            print "Vertex index:", vList[i]
+            print "Layer Type:", i/3+1
+            print "Sub-layer:", lst_arr[vList[i+1]-1][vList[i+2]-1][1]
+            self.vertices[vList[i]] = lst_arr[vList[i+1]-1][vList[i+2]-1][1]
+            i=i+3
+        i=0
+        while i<len(eList):
+            if eList[i] not in self.edges:
+                self.edges[eList[i]]=[]
+            self.edges[eList[i]].append(eList[i+1])
+            i=i+2
+
 
 @app.route('/apply', methods=['GET', 'POST'])
 def apply():
@@ -46,64 +87,15 @@ def apply():
         vertices[i] = int(vertices[i])
     for i in xrange(len(edges)):
         edges[i] = int(edges[i])
+    vertices = vertices[6:]
     print vertices
     print edges
-    # print l, type(l)
-    # pipeline_2 = [-1]
-    # for _ in l:
-    #     pipeline_2.append(int(_))
-
-    # for a,b in tuple_list:
-    #     pipeline_1.append(a)
-
-    # print pipeline_1
-    # print pipeline_2
-
-    # if pipeline_1 != pipeline_2:
-    #     i = 1;
-    #     min_len = min(len(pipeline_1),len(pipeline_2))
-    #     while i<min_len:
-    #         if pipeline_1[i]!=pipeline_2[i]:
-    #             break
-    #         i=i+1
-
-    #     if i<len(pipeline_1):
-    #         j = i
-    #         while j<len(pipeline_1):
-    #             print "Deleting "+tuple_list[j][1]
-    #             os.remove(tuple_list[j][1])
-    #             j=j+1
-    #         tuple_list = tuple_list[:i]
-    #         if i==0:
-    #             print "Emptying tuple_list"
-
-    #     while i<len(pipeline_2):
-    #         op = lst[pipeline_2[i]][1]
-    #         print op
-    #         print len(tuple_list)
-
-    #         input_location = os.path.join(app.static_folder, tuple_list[i-1][1])
-    #         script_location = os.path.join(app.static_folder, "scripts/"+op+".py")
-
-    #         print "Before: "+input_location
-
-    #         name, ext = os.path.splitext(input_location)
-    #         name = name[:name.rfind("_")]
-    #         timestamp = time.time()
-    #         output_location = name+"_"+str(timestamp)+ext
-
-    #         print "After: "+output_location
-
-    #         call(["python",script_location,input_location,output_location])
-
-    #         tuple_list.append((pipeline_2[i],output_location))
-
-    #         i=i+1
-
-    #     image = tuple_list[-1][1]
-    # print "/static/temp/"+image.split("/")[-1]
-    return jsonify(result = "/static/temp/"+image.split("/")[-1])
-
+    myGraph = dGraph(vertices,edges)
+    for k,v in myGraph.vertices.iteritems():
+        print k,v
+    for k,v in myGraph.edges.iteritems():
+        print k,v
+    return "Success"
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -126,7 +118,8 @@ def index():
     except e:
         print "Exception happened"
         print type(e)
-    return render_template('index.html', uform=uform, image=image, lst=lst, plumb="jsPlumb-2.0.7.js",app="app.js",app_css="app.css")
+    return render_template('index.html', cnt=0, uform=uform, image=image,
+        lst_arr=lst_arr, plumb="jsPlumb-2.0.7.js",app="app.js",app_css="app.css")
 
 @app.after_request
 def add_header(response):
@@ -140,4 +133,5 @@ def add_header(response):
 
 if __name__ == '__main__':
     fill_list()
+    print lst_arr
     app.run(debug=True)

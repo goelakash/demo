@@ -3,15 +3,15 @@ var _addEndpoints;
 var instance;
 var idCount=2;
 
-function addNode(){
+function addNode(index){
     idCount = idCount+1;
-    console.log($('#selector').find(":selected").text());
+    console.log($('#selector'+index).find(":selected").text());
     console.log("flowchartWindow"+idCount);
     var new_item = '<div class="window jtk-node" '
                     +'id="flowchartWindow'+idCount+'">'+
-                    '<strong>'+$('#selector').find(":selected").text()+'</strong><br>'
-                    +'<label style="display: none;">'+idCount+'-'
-                    +$('#selector').find(":selected").val()+'</label></div>'
+                    '<strong>'+$('#selector'+index).find(":selected").text()+'</strong><br>'
+                    +'<label style="display: none;">'+idCount+'-'+index+'-'
+                    +$('#selector'+index).find(":selected").val()+'</label></div>'
     $("#canvas").append(new_item);
     _addEndpoints("Window"+idCount);
     instance.draggable(document.querySelectorAll(".flowchart-demo .window"), { grid: [20, 10] })
